@@ -1,4 +1,4 @@
-package controllers
+package teachers
 
 import (
 	"net/http"
@@ -19,6 +19,7 @@ func GetTeachers(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	if err != nil {
 		util.SendInternalServerErrorResponse(w)
+		return
 	}
 
 	res := GetTeachersResponse{

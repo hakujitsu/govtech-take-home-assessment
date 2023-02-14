@@ -1,4 +1,4 @@
-package controllers
+package teachers
 
 import (
 	"assignment/teacher-api/services"
@@ -9,11 +9,14 @@ import (
 )
 
 func DeleteTeacher(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	err := services.DeleteTeacherService(ps.ByName("email"))
+	queryValues := r.URL.Query()
+	email := queryValues.Get("email")
+	err := services.DeleteTeacherService(email)
 
 	if err != nil {
 		util.SendInternalServerErrorResponse(w)
+		return
 	}
 
-	util.SendResponse(w, http.StatusNoContent, "Teacher was deleted")
+	util.SendResponse(w, http.StatusNoContent, "")
 }

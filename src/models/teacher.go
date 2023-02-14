@@ -10,12 +10,6 @@ type Teacher struct {
 	Email string
 }
 
-type Student struct {
-	ID           int
-	Email        string
-	Is_Suspended bool
-}
-
 func ReadRowAsTeacher(result *sql.Row) (Teacher, error) {
 	var t Teacher
 	err := result.Scan(&t.ID, &t.Email)

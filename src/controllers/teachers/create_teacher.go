@@ -1,4 +1,4 @@
-package controllers
+package teachers
 
 import (
 	"net/http"
@@ -10,19 +10,21 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-type CreateTeachersResponse struct {
+type CreateTeacherResponse struct {
 	Teacher models.Teacher `json:"teacher"`
 }
 
 func CreateTeacher(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	email := ps.ByName("email")
+	queryValues := r.URL.Query()
+	email := queryValues.Get("email")
 	teacher, err := services.CreateTeacherService(email)
 
 	if err != nil {
 		util.SendInternalServerErrorResponse(w)
+		return
 	}
 
-	res := CreateTeachersResponse{
+	res := CreateTeacherResponse{
 		Teacher: teacher,
 	}
 
