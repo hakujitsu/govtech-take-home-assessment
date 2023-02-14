@@ -18,7 +18,7 @@ func GetTeachers(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	teachers, err := services.GetTeachersService()
 
 	if err != nil {
-		util.SendResponse(w, http.StatusBadRequest, "Teacher was not created")
+		util.SendInternalServerErrorResponse(w)
 	}
 
 	res := GetTeachersResponse{

@@ -12,7 +12,7 @@ func DeleteTeacher(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 	err := services.DeleteTeacherService(ps.ByName("email"))
 
 	if err != nil {
-		util.SendResponse(w, http.StatusBadRequest, "Teacher was not deleted")
+		util.SendInternalServerErrorResponse(w)
 	}
 
 	util.SendResponse(w, http.StatusNoContent, "Teacher was deleted")

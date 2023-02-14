@@ -11,11 +11,12 @@ import (
 )
 
 func CreateTeacher(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	id, err := services.CreateTeacherService(ps.ByName("email"))
+	email := ps.ByName("email")
+	id, err := services.CreateTeacherService(email)
 
 	if err != nil {
-		util.SendResponse(w, http.StatusBadRequest, "Teacher was not created")
+		util.SendInternalServerErrorResponse(w)
 	}
 
-	util.SendResponse(w, http.StatusCreated, fmt.Sprintf("Teacher %v was created", id))
+	util.SendResponse(w, http.StatusCreated, fmt.Sprintf("Teacher with ID %v and email %v was created", id, email))
 }
