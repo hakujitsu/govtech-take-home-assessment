@@ -6,13 +6,19 @@ import (
 	"fmt"
 )
 
-func CreateTeacherService(email string) (int64, error) {
+func CreateTeacherService(email string) (models.Teacher, error) {
 	id, err := database.AddTeacherToDB(email)
 
 	if err != nil {
-		return 0, fmt.Errorf("CreateTeacher: %v", err)
+		return models.Teacher{}, fmt.Errorf("CreateTeacher: %v", err)
 	}
-	return id, nil
+
+	teacher, err := database.ReadTeacherFromDB(id)
+	if err != nil {
+		return models.Teacher{}, fmt.Errorf("CreateTeacher: %v", err)
+	}
+
+	return teacher, nil
 }
 
 func DeleteTeacherService(email string) error {
