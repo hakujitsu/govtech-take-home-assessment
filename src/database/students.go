@@ -44,3 +44,12 @@ func DeleteStudentFromDB(email string) error {
 	}
 	return nil
 }
+
+func UpdateStudentInDB(email string, isSuspended bool) error {
+	_, err := db.Exec("UPDATE students SET is_suspended = ? WHERE email = ?", isSuspended, email)
+	if err != nil {
+		fmt.Printf("%v", err)
+		return fmt.Errorf("UpdateStudentInDB: %v", err)
+	}
+	return nil
+}

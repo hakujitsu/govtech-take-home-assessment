@@ -28,8 +28,8 @@ func main() {
 	router.DELETE("/api/student", students.DeleteStudent)
 
 	// TODO: implement suspension of student apis
-	// router.POST("/api/suspend", students.CreateStudent)
-	// router.POST("/api/unsuspend", students.DeleteStudent)
+	router.POST("/api/suspend", students.SuspendStudent)
+	router.POST("/api/unsuspend", students.UnsuspendStudent)
 
 	// TODO: implement class apis (check path for second one)
 	// router.POST("/api/register", students.CreateStudent)

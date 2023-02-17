@@ -38,3 +38,9 @@ func GetStudentsService() ([]models.Student, error) {
 	}
 	return students, nil
 }
+
+func SuspendStudentService(email string, suspend bool) error {
+	err := database.UpdateStudentInDB(email, suspend)
+
+	return err
+}

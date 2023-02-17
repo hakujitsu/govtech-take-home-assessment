@@ -10,14 +10,23 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
+type CreateTeacherRequest struct {
+	Email string `json:"email"`
+}
+
 type CreateTeacherResponse struct {
 	Teacher models.Teacher `json:"teacher"`
 }
 
 func CreateTeacher(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	queryValues := r.URL.Query()
-	email := queryValues.Get("email")
-	teacher, err := services.CreateTeacherService(email)
+	var data CreateTeacherRequest
+	err := util.ParseRequest(r, &data)
+	if err != nil {
+		util.SendErrorResponse(w, err.Error())
+		return
+	}
+
+	teacher, err := services.CreateTeacherService(data.Email)
 
 	if err != nil {
 		util.SendInternalServerErrorResponse(w)
