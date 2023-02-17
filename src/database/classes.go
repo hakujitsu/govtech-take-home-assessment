@@ -9,18 +9,13 @@ import (
 )
 
 // TODO: wrap in transaction
-func RegisterStudentsToTeacherInDB(studentEmails []string, teacherEmail string) error {
-	teacher, err := ReadTeacherFromDBWithEmail(teacherEmail)
+func RegisterStudentsToTeacherInDB(tx *sqlx.Tx, studentEmails []string, teacherId int) error {
+	query, args, err := sqlx.In("SELECT "+strconv.Itoa(teacherId)+" AS teacher_id, ID AS student_id FROM students WHERE email IN (?);", studentEmails)
 	if err != nil {
 		return err
 	}
-
-	query, args, err := sqlx.In("SELECT "+strconv.Itoa(teacher.ID)+" AS teacher_id, ID AS student_id FROM students WHERE email IN (?);", studentEmails)
-	if err != nil {
-		return err
-	}
-	query = db.Rebind(query)
-	rows, err := db.Query(query, args...)
+	query = tx.Rebind(query)
+	rows, err := tx.Query(query, args...)
 	if err != nil {
 		return err
 	}
@@ -30,7 +25,7 @@ func RegisterStudentsToTeacherInDB(studentEmails []string, teacherEmail string) 
 		return err
 	}
 
-	_, err = db.NamedExec("INSERT IGNORE INTO classes (teacher_id, student_id) VALUES (:teacher_id, :student_id)", class)
+	_, err = tx.NamedExec("INSERT IGNORE INTO classes (teacher_id, student_id) VALUES (:teacher_id, :student_id)", class)
 	if err != nil {
 		return fmt.Errorf("RegisterStudentsToTeacherInDB: %v", err)
 	}
@@ -47,8 +42,8 @@ func GetCommonStudentsFromDB(teachers []string) ([]models.Student, error) {
 	if err != nil {
 		return nil, err
 	}
-	query = db.Rebind(query)
-	rows, err := db.Query(query, args...)
+	query = DB.Rebind(query)
+	rows, err := DB.Query(query, args...)
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +52,7 @@ func GetCommonStudentsFromDB(teachers []string) ([]models.Student, error) {
 }
 
 func GetUnsuspendedStudentsFromTeacher(teacherEmail string, studentsEmails []string) ([]models.Student, error) {
-	doesTeacherExist, err := db.Query("SELECT 1 FROM teachers WHERE email = ?", teacherEmail)
+	doesTeacherExist, err := DB.Query("SELECT 1 FROM teachers WHERE email = ?", teacherEmail)
 	if err != nil {
 		return nil, err
 	} else if !doesTeacherExist.Next() {
@@ -73,8 +68,8 @@ func GetUnsuspendedStudentsFromTeacher(teacherEmail string, studentsEmails []str
 	if err != nil {
 		return nil, err
 	}
-	query = db.Rebind(query)
-	rows, err := db.Query(query, args...)
+	query = DB.Rebind(query)
+	rows, err := DB.Query(query, args...)
 	if err != nil {
 		return nil, err
 	}

@@ -1,4 +1,4 @@
-package classes
+package controllers
 
 import (
 	"assignment/teacher-api/services"
@@ -13,6 +13,7 @@ type GetCommonStudentsResponse struct {
 	Students []string `json:"students"`
 }
 
+// TODO: do some validation
 func GetCommonStudents(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	queryValues := r.URL.Query()
 	teachers := queryValues["teacher"]

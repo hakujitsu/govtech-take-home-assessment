@@ -1,4 +1,4 @@
-package classes
+package controllers
 
 import (
 	"assignment/teacher-api/services"
@@ -8,9 +8,10 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
+// TODO: validate student emails
 type RegisterStudentsRequest struct {
-	TeacherEmail  string   `json:"teacher"`
-	StudentEmails []string `json:"students"`
+	TeacherEmail  string   `json:"teacher" validate:"required,email"`
+	StudentEmails []string `json:"students" validate:"required,dive,required,email"`
 }
 
 func RegisterStudents(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {

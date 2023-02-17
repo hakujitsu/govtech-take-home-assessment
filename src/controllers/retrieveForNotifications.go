@@ -1,4 +1,4 @@
-package classes
+package controllers
 
 import (
 	"assignment/teacher-api/services"
@@ -9,8 +9,8 @@ import (
 )
 
 type RetrieveForNotificationsRequest struct {
-	Teacher      string `json:"teacher"`
-	Notification string `json:"notification"`
+	Teacher      string `json:"teacher" validate:"required,email"`
+	Notification string `json:"notification" validate:"required"`
 }
 
 type RetrieveForNotificationsResponse struct {

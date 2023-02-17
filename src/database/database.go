@@ -11,7 +11,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
-var db *sqlx.DB
+var DB *sqlx.DB
 
 func init() {
 	err := godotenv.Load(".env")
@@ -33,9 +33,9 @@ func init() {
 		log.Fatal(err)
 	}
 
-	db = sqlx.NewDb(sqlDb, "mysql")
+	DB = sqlx.NewDb(sqlDb, "mysql")
 
-	pingErr := db.Ping()
+	pingErr := DB.Ping()
 	if pingErr != nil {
 		log.Fatal(pingErr)
 	}

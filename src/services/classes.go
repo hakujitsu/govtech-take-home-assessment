@@ -8,9 +8,31 @@ import (
 )
 
 func RegisterStudentsToTeacherService(studentEmails []string, teacherEmail string) error {
-	err := database.RegisterStudentsToTeacherInDB(studentEmails, teacherEmail)
+	students := models.CreateNewStudentsFromEmail(studentEmails)
+
+	tx, err := database.DB.Beginx()
 	if err != nil {
-		return fmt.Errorf("RegisterStudentsToTeacherService: %v", err)
+		return err
+	}
+	defer tx.Rollback()
+
+	id, err := database.AddTeacherToDB(tx, teacherEmail)
+	if err != nil {
+		return err
+	}
+
+	err = database.AddStudentsToDB(tx, students)
+	if err != nil {
+		return err
+	}
+
+	err = database.RegisterStudentsToTeacherInDB(tx, studentEmails, id)
+	if err != nil {
+		return err
+	}
+
+	if err = tx.Commit(); err != nil {
+		return err
 	}
 
 	return nil
@@ -26,7 +48,10 @@ func GetCommonStudentsService(teacherEmails []string) ([]models.Student, error) 
 	return students, nil
 }
 
-// TODO: need to ensure no duplicates
+func SuspendStudentService(email string, suspend bool) error {
+	return database.UpdateStudentInDB(email, suspend)
+}
+
 func RetrieveForNotificationsService(teacher string, notification string) ([]models.Student, error) {
 	mentionedStudents := parseForMentions(notification)
 	students, err := database.GetUnsuspendedStudentsFromTeacher(teacher, mentionedStudents)

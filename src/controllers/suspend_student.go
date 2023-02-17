@@ -1,4 +1,4 @@
-package students
+package controllers
 
 import (
 	"assignment/teacher-api/services"
