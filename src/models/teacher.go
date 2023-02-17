@@ -20,7 +20,7 @@ func ReadRowAsTeacher(result *sql.Row) (Teacher, error) {
 	return t, nil
 }
 
-func ReadRowsAsTeacher(results *sql.Rows) ([]Teacher, error) {
+func ReadRowsAsTeachers(results *sql.Rows) ([]Teacher, error) {
 	var teachers = make([]Teacher, 0)
 	for results.Next() {
 		var t Teacher

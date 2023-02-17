@@ -13,7 +13,7 @@ import (
 
 var DB *sqlx.DB
 
-func init() {
+func InitialiseDB() {
 	err := godotenv.Load(".env")
 	if err != nil {
 		log.Fatalf("Error loading .env file")
@@ -23,9 +23,9 @@ func init() {
 	cfg := mysql.Config{
 		User:   os.Getenv("DBUSER"),
 		Passwd: os.Getenv("DBPASS"),
-		Net:    "tcp",
-		Addr:   "127.0.0.1:3306",
-		DBName: "edusystem",
+		Net:    os.Getenv("DBNET"),
+		Addr:   os.Getenv("DBADDR"),
+		DBName: os.Getenv("DBNAME"),
 	}
 	// Get a database handle.
 	sqlDb, err := sql.Open("mysql", cfg.FormatDSN())
@@ -40,4 +40,34 @@ func init() {
 		log.Fatal(pingErr)
 	}
 	fmt.Println("Connected to MySQL DB!")
+}
+
+func InitialiseTestDB() {
+	err := godotenv.Load("../.env")
+	if err != nil {
+		fmt.Printf("%v", err)
+		log.Fatalf("Error loading .env file")
+	}
+
+	// Capture connection properties.
+	cfg := mysql.Config{
+		User:   os.Getenv("TEST_DBUSER"),
+		Passwd: os.Getenv("TEST_DBPASS"),
+		Net:    os.Getenv("TEST_DBNET"),
+		Addr:   os.Getenv("TEST_DBADDR"),
+		DBName: os.Getenv("TEST_DBNAME"),
+	}
+	// Get a database handle.
+	sqlDb, err := sql.Open("mysql", cfg.FormatDSN())
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	DB = sqlx.NewDb(sqlDb, "mysql")
+
+	pingErr := DB.Ping()
+	if pingErr != nil {
+		log.Fatal(pingErr)
+	}
+	fmt.Println("Connected to MySQL Test DB!")
 }

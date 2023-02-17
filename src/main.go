@@ -2,6 +2,7 @@ package main
 
 import (
 	"assignment/teacher-api/controllers"
+	"assignment/teacher-api/database"
 	"fmt"
 	"log"
 	"net/http"
@@ -14,6 +15,7 @@ func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 }
 
 func main() {
+	database.InitialiseDB()
 	router := httprouter.New()
 	router.GET("/", Index)
 
