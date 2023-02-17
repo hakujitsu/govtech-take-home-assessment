@@ -7,6 +7,7 @@ import (
 
 	"github.com/julienschmidt/httprouter"
 
+	"assignment/teacher-api/controllers/classes"
 	"assignment/teacher-api/controllers/students"
 	"assignment/teacher-api/controllers/teachers"
 )
@@ -27,12 +28,11 @@ func main() {
 	router.POST("/api/student", students.CreateStudent)
 	router.DELETE("/api/student", students.DeleteStudent)
 
-	// TODO: implement suspension of student apis
 	router.POST("/api/suspend", students.SuspendStudent)
 	router.POST("/api/unsuspend", students.UnsuspendStudent)
 
 	// TODO: implement class apis (check path for second one)
-	// router.POST("/api/register", students.CreateStudent)
+	router.POST("/api/register", classes.RegisterStudents)
 	// router.GET("/api/commonstudents/:teacher", students.GetStudents)
 
 	// TODO: implement notification api

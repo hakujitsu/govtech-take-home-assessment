@@ -7,10 +7,11 @@ import (
 	"os"
 
 	"github.com/go-sql-driver/mysql"
+	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"
 )
 
-var db *sql.DB
+var db *sqlx.DB
 
 func init() {
 	err := godotenv.Load(".env")
@@ -27,10 +28,12 @@ func init() {
 		DBName: "edusystem",
 	}
 	// Get a database handle.
-	db, err = sql.Open("mysql", cfg.FormatDSN())
+	sqlDb, err := sql.Open("mysql", cfg.FormatDSN())
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	db = sqlx.NewDb(sqlDb, "mysql")
 
 	pingErr := db.Ping()
 	if pingErr != nil {

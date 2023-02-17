@@ -6,8 +6,8 @@ import (
 )
 
 type Teacher struct {
-	ID    int
-	Email string
+	ID    int    `db:"id"`
+	Email string `db:"email"`
 }
 
 func ReadRowAsTeacher(result *sql.Row) (Teacher, error) {

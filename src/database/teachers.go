@@ -25,6 +25,12 @@ func ReadTeacherFromDB(id int) (models.Teacher, error) {
 	return models.ReadRowAsTeacher(result)
 }
 
+func ReadTeacherFromDBWithEmail(email string) (models.Teacher, error) {
+	result := db.QueryRow("SELECT * FROM teachers WHERE email = ?;", email)
+
+	return models.ReadRowAsTeacher(result)
+}
+
 func ReadTeachersFromDB() ([]models.Teacher, error) {
 	results, err := db.Query("SELECT * FROM teachers;")
 	if err != nil {

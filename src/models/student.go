@@ -6,9 +6,9 @@ import (
 )
 
 type Student struct {
-	ID           int
-	Email        string
-	Is_Suspended bool
+	ID           int    `db:"id"`
+	Email        string `db:"email"`
+	Is_Suspended bool   `db:"is_suspended"`
 }
 
 func ReadRowAsStudent(result *sql.Row) (Student, error) {
