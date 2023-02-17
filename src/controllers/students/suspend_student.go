@@ -9,7 +9,7 @@ import (
 )
 
 type SuspendStudentRequest struct {
-	Email string `json:"student"`
+	Email string `json:"student" validate:"required,email"`
 }
 
 func SuspendStudent(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -19,11 +19,16 @@ func SuspendStudent(w http.ResponseWriter, r *http.Request, ps httprouter.Params
 		util.SendErrorResponse(w, err.Error())
 		return
 	}
+	err = util.ValidateRequest(&data)
+	if err != nil {
+		util.SendErrorResponse(w, err.Error())
+		return
+	}
 
 	err = services.SuspendStudentService(data.Email, true)
 
 	if err != nil {
-		util.SendInternalServerErrorResponse(w)
+		util.SendErrorResponse(w, err.Error())
 		return
 	}
 

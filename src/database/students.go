@@ -2,6 +2,8 @@ package database
 
 import (
 	"assignment/teacher-api/models"
+	"assignment/teacher-api/util"
+	"errors"
 	"fmt"
 )
 
@@ -39,17 +41,22 @@ func ReadStudentsFromDB() ([]models.Student, error) {
 func DeleteStudentFromDB(email string) error {
 	_, err := db.Exec("DELETE FROM students WHERE email = ?", email)
 	if err != nil {
-		fmt.Printf("%v", err)
-		return fmt.Errorf("DeleteStudentFromDB: %v", err)
+		return err
 	}
 	return nil
 }
 
 func UpdateStudentInDB(email string, isSuspended bool) error {
-	_, err := db.Exec("UPDATE students SET is_suspended = ? WHERE email = ?", isSuspended, email)
+	doesStudentExist, err := db.Query("SELECT 1 FROM students WHERE email = ?", email)
 	if err != nil {
-		fmt.Printf("%v", err)
-		return fmt.Errorf("UpdateStudentInDB: %v", err)
+		return err
+	} else if !doesStudentExist.Next() {
+		return errors.New(util.STUDENT_DOES_NOT_EXIST)
+	}
+
+	_, err = db.Exec("UPDATE students SET is_suspended = ? WHERE email = ?", isSuspended, email)
+	if err != nil {
+		return err
 	}
 	return nil
 }

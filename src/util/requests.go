@@ -4,22 +4,32 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+
+	"github.com/go-playground/validator"
 )
 
 func ParseRequest(r *http.Request, data interface{}) error {
 	headerContentTtype := r.Header.Get("Content-Type")
 	if headerContentTtype != "application/json" {
-		return errors.New("Content Type is not application/json")
+		return errors.New(INCORRECT_APPLICATION_TYPE)
 	}
 
 	dec := json.NewDecoder(r.Body)
-	dec.DisallowUnknownFields()
-
+	// dec.DisallowUnknownFields()
 	err := dec.Decode(&data)
 	if err != nil {
-		// TODO: handle logging
-		return errors.New("Could not parse request body")
+		return errors.New(COULD_NOT_PARSE_REQUEST)
 	}
 
+	return nil
+}
+
+func ValidateRequest(data interface{}) error {
+	validate := validator.New()
+	err := validate.Struct(data)
+	if err != nil {
+		// validationErrors := err.(validator.ValidationErrors)
+		return errors.New(INVALID_REQUEST_SYNTAX)
+	}
 	return nil
 }

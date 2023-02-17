@@ -1,3 +1,9 @@
+## Versions
+
+Go 1.18.1
+
+
+
 ## Instructions on Running the Server
 
 

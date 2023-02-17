@@ -57,7 +57,12 @@ func GetCommonStudentsFromDB(teachers []string) ([]models.Student, error) {
 }
 
 func GetUnsuspendedStudentsFromTeacher(teacherEmail string, studentsEmails []string) ([]models.Student, error) {
-	// TODO: check if teacher exists
+	doesTeacherExist, err := db.Query("SELECT 1 FROM teachers WHERE email = ?", teacherEmail)
+	if err != nil {
+		return nil, err
+	} else if !doesTeacherExist.Next() {
+		return nil, err
+	}
 
 	query, args, err := sqlx.In("SELECT DISTINCT students.* FROM "+
 		"(SELECT * FROM students WHERE students.is_suspended = FALSE) AS students "+

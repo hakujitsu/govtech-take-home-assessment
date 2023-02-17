@@ -40,7 +40,5 @@ func GetStudentsService() ([]models.Student, error) {
 }
 
 func SuspendStudentService(email string, suspend bool) error {
-	err := database.UpdateStudentInDB(email, suspend)
-
-	return err
+	return database.UpdateStudentInDB(email, suspend)
 }
