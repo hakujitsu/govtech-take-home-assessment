@@ -37,3 +37,21 @@ func RegisterStudentsToTeacherInDB(studentEmails []string, teacherEmail string) 
 
 	return nil
 }
+
+func GetCommonStudentsFromDB(teachers []string) ([]models.Student, error) {
+	query, args, err := sqlx.In("SELECT DISTINCT students.* FROM students "+
+		"INNER JOIN classes ON students.id = classes.student_id "+
+		"INNER JOIN teachers ON teachers.id = classes.teacher_id "+
+		"WHERE teachers.email in (?) GROUP BY students.email "+
+		"HAVING COUNT(*) = "+strconv.Itoa(len(teachers))+";", teachers)
+	if err != nil {
+		return nil, err
+	}
+	query = db.Rebind(query)
+	rows, err := db.Query(query, args...)
+	if err != nil {
+		return nil, err
+	}
+
+	return models.ReadRowsAsStudents(rows)
+}

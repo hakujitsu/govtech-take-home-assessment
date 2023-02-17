@@ -31,9 +31,8 @@ func main() {
 	router.POST("/api/suspend", students.SuspendStudent)
 	router.POST("/api/unsuspend", students.UnsuspendStudent)
 
-	// TODO: implement class apis (check path for second one)
 	router.POST("/api/register", classes.RegisterStudents)
-	// router.GET("/api/commonstudents/:teacher", students.GetStudents)
+	router.GET("/api/commonstudents", classes.GetCommonStudents)
 
 	// TODO: implement notification api
 	// router.POST("/api/retrievefornotifications", students.CreateStudent)
