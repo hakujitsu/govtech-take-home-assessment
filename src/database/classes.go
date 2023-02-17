@@ -55,3 +55,29 @@ func GetCommonStudentsFromDB(teachers []string) ([]models.Student, error) {
 
 	return models.ReadRowsAsStudents(rows)
 }
+
+func GetUnsuspendedStudentsFromTeacher(teacherEmail string, studentsEmails []string) ([]models.Student, error) {
+	// TODO: check if teacher exists
+
+	query, args, err := sqlx.In("SELECT DISTINCT students.* FROM "+
+		"(SELECT * FROM students WHERE students.is_suspended = FALSE) AS students "+
+		"INNER JOIN classes ON students.id = classes.student_id "+
+		"INNER JOIN teachers ON teachers.id = classes.teacher_id "+
+		"WHERE teachers.email = ? OR students.email IN (?)", teacherEmail, studentsEmails)
+
+	if err != nil {
+		return nil, err
+	}
+	query = db.Rebind(query)
+	rows, err := db.Query(query, args...)
+	if err != nil {
+		return nil, err
+	}
+
+	students, err := models.ReadRowsAsStudents(rows)
+	if err != nil {
+		return nil, err
+	}
+
+	return students, nil
+}

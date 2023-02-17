@@ -34,8 +34,7 @@ func main() {
 	router.POST("/api/register", classes.RegisterStudents)
 	router.GET("/api/commonstudents", classes.GetCommonStudents)
 
-	// TODO: implement notification api
-	// router.POST("/api/retrievefornotifications", students.CreateStudent)
+	router.POST("/api/retrievefornotifications", classes.RetrieveForNotifications)
 
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
