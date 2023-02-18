@@ -41,8 +41,7 @@ func RegisterStudentsToTeacherService(studentEmails []string, teacherEmail strin
 func GetCommonStudentsService(teacherEmails []string) ([]models.Student, error) {
 	students, err := database.GetCommonStudentsFromDB(teacherEmails)
 	if err != nil {
-		fmt.Printf("%v", err)
-		return nil, fmt.Errorf("RegisterStudentsToTeacherService: %v", err)
+		return nil, fmt.Errorf("GetCommonStudentsService: %v", err)
 	}
 
 	return students, nil
@@ -56,7 +55,6 @@ func RetrieveForNotificationsService(teacher string, notification string) ([]mod
 	mentionedStudents := parseForMentions(notification)
 	students, err := database.GetUnsuspendedStudentsFromTeacher(teacher, mentionedStudents)
 	if err != nil {
-		fmt.Printf("%v", err)
 		return nil, fmt.Errorf("RetrieveForNotificationsService: %v", err)
 	}
 

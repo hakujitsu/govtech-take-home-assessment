@@ -26,7 +26,6 @@ func SuspendStudent(w http.ResponseWriter, r *http.Request, ps httprouter.Params
 	}
 
 	err = services.SuspendStudentService(data.Email, true)
-
 	if err != nil {
 		util.SendErrorResponse(w, err.Error())
 		return
