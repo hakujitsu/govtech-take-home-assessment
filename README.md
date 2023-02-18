@@ -1,5 +1,7 @@
 # GovTech Technical Assessment
 
+Submission by: Kwek Min Yih
+
 ## Versions
 
 This project uses Go 1.18.1 and MySQL 8.0.19
@@ -13,7 +15,9 @@ This project uses Go 1.18.1 and MySQL 8.0.19
 
 ### Setting up the DB
 
-1. Create a MySQL database, and specify the following settings in the .env file
+1. Create a MySQL database
+
+2. Create a `.env` file in the `src/` folder and specify the following settings
 
 ```
 DBUSER=<fill in user>
@@ -32,7 +36,7 @@ For more details on filling in the database settings, check the documentation fo
 brew install golang-migrate
 ```
 
-3. In the `src/migrations` folder, run the following command to run the migrations.
+3. In the `migrations/` folder, run the following command to run the migrations.
 ```
 migrate -path "./db_migrations" -database  "mysql://username:password@protocol(address)/dbname" up
 ```
@@ -42,7 +46,7 @@ The schema can be dropped by running the following command if need be.
 migrate -path "./db_migrations" -database  "mysql://username:password@protocol(address)/dbname" drop
 ```
 
-## Running the server
+### Running the server
 
 In the `src/` folder, run the command `go run main.go`
 
