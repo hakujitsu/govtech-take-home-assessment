@@ -24,6 +24,11 @@ func RetrieveForNotifications(w http.ResponseWriter, r *http.Request, ps httprou
 		util.SendErrorResponse(w, err.Error())
 		return
 	}
+	err = util.ValidateRequest(&data)
+	if err != nil {
+		util.SendErrorResponse(w, err.Error())
+		return
+	}
 	students, err := services.RetrieveForNotificationsService(data.Teacher, data.Notification)
 	if err != nil {
 		util.SendInternalServerErrorResponse(w)

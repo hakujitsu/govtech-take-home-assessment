@@ -9,11 +9,14 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
+type GetCommonStudentsRequest struct {
+	Teachers []string `json:"teachers" validate:"required,min=1,dive,required,email"`
+}
+
 type GetCommonStudentsResponse struct {
 	Students []string `json:"students"`
 }
 
-// TODO: do some validation
 func GetCommonStudents(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	queryValues := r.URL.Query()
 	teachers := queryValues["teacher"]
@@ -25,6 +28,15 @@ func GetCommonStudents(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 		if len(filteredTeachers) == 0 || filteredTeachers[len(filteredTeachers)-1] != t {
 			filteredTeachers = append(filteredTeachers, t)
 		}
+	}
+
+	data := GetCommonStudentsRequest{
+		Teachers: teachers,
+	}
+	err := util.ValidateRequest(&data)
+	if err != nil {
+		util.SendErrorResponse(w, err.Error())
+		return
 	}
 
 	students, err := services.GetCommonStudentsService(filteredTeachers)

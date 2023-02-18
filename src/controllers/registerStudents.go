@@ -8,15 +8,19 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-// TODO: validate student emails
 type RegisterStudentsRequest struct {
 	TeacherEmail  string   `json:"teacher" validate:"required,email"`
-	StudentEmails []string `json:"students" validate:"required,dive,required,email"`
+	StudentEmails []string `json:"students" validate:"required,min=1,dive,required,email"`
 }
 
 func RegisterStudents(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	var data RegisterStudentsRequest
 	err := util.ParseRequest(r, &data)
+	if err != nil {
+		util.SendErrorResponse(w, err.Error())
+		return
+	}
+	err = util.ValidateRequest(&data)
 	if err != nil {
 		util.SendErrorResponse(w, err.Error())
 		return
